@@ -34,10 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
     box12,
     box13
   ];
+sqarray = []
+
+function getGrid () {
+  return document.getElementById("identicon")
+}
 
   function randomSequence(n) {
     let i = 0;
-    sqarray = [];
+    // sqarray = []
     while (i < n) {
       var randomItem = boxArray[Math.floor(Math.random() * boxArray.length)];
       sqarray.push(randomItem);
@@ -63,4 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
       boxArray[i].style.backgroundColor = "white";
     }
   }
+
+// will listen for click event on square
+//and generate a new sequence
+
+function listenForSelection () {
+  eventArray = []
+  document.getElementById("main").addEventListener("click", (e) => {
+    debugger
+    eventArray.push(e.target)
+    
+  })
+} 
 });
