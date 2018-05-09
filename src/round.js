@@ -4,7 +4,8 @@
 // if it is, a new sequence will be created that is one additional box longer
 document.addEventListener("DOMContentLoaded", () => {
   let counter = 0;
-
+});
+function boxArray() {
   let box1 = document.getElementById("0-0");
   let box2 = document.getElementById("0-1");
   let box3 = document.getElementById("0-2");
@@ -19,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let box12 = document.getElementById("2-1");
   let box13 = document.getElementById("2-2");
 
-  let boxArray = [
+  return [
     box1,
     box2,
     box3,
@@ -34,50 +35,61 @@ document.addEventListener("DOMContentLoaded", () => {
     box12,
     box13
   ];
-sqarray = []
-
-function getGrid () {
-  return document.getElementById("identicon")
+}
+function getGrid() {
+  return document.getElementById("identicon");
 }
 
-  function randomSequence(n) {
-    let i = 0;
-    // sqarray = []
-    while (i < n) {
-      var randomItem = boxArray[Math.floor(Math.random() * boxArray.length)];
-      sqarray.push(randomItem);
-      i++;
-    }
-    return sqarray;
+function randomSequence(n) {
+  let i = 0;
+  let sqarray = [];
+  let arraybox = boxArray();
+  // sqarray = []
+  while (i < n) {
+    var randomItem = arraybox[Math.floor(Math.random() * arraybox.length)];
+    sqarray.push(randomItem);
+    i++;
   }
+  return sqarray;
+}
 
-  function changeColor() {
-    let sequence = randomSequence(4);
-    for (let i = 0; i < sequence.length; i++) {
-      let currentBox = sequence[i];
-      currentBox.style.backgroundColor = "black";
-      setTimeout(
-        () => (currentBox.style.backgroundColor = "rgb(245, 245, 250)"),
-        1000
-      );
-    }
+function changeColor(sequence) {
+  for (let i = 0; i < sequence.length; i++) {
+    sequence[i].style.backgroundColor = "black";
+    // setTimeout(
+    //   () => (currentBox.style.backgroundColor = "rgb(245, 245, 250)"),
+    //   1000
+    // );
   }
+}
 
-  function resetAllWhite() {
-    for (let i = 0; i < boxArray.length; i++) {
-      boxArray[i].style.backgroundColor = "white";
-    }
+function resetAllWhite(boxarray) {
+  for (let i = 0; i < boxarray.length; i++) {
+    boxarray[i].style.backgroundColor = "white";
   }
+}
 
-// will listen for click event on square
-//and generate a new sequence
+// will listen for click event on square to check user response
 
-function listenForSelection () {
-  eventArray = []
-  document.getElementById("main").addEventListener("click", (e) => {
-    debugger
-    eventArray.push(e.target)
-    
-  })
-} 
-});
+function listenForSelection() {
+  eventArray = [];
+  clickCount = sqarray.length;
+
+  document.getElementById("main").addEventListener("click", e => {
+    eventArray.push(e.target);
+    console.log("cool");
+  });
+  if (eventArray === sqarray) {
+    console.log("coorect");
+  }
+}
+
+// generate a new sequence
+//flash the colors of sequence
+//set setTimeout
+//chnge colors back go white
+//listen for clicks
+// store loctaion of click
+//compare it the original sequence
+//-- correct sequence = each click matches sequence array order
+//--incorrect -
