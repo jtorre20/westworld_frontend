@@ -2,9 +2,7 @@
 // user will then repeat the sequence
 //then another function will check that it was the correct sequence
 // if it is, a new sequence will be created that is one additional box longer
-document.addEventListener("DOMContentLoaded", () => {
-
-}) 
+document.addEventListener("DOMContentLoaded", () => {});
 let userSelection = [];
 let sqarray = [];
 
@@ -23,7 +21,6 @@ function getGrid() {
   return document.getElementById("identicon");
 }
 
-
 function randomSequence(n) {
   let i = 0;
   let arraybox = boxArray();
@@ -33,18 +30,17 @@ function randomSequence(n) {
     sqarray.push(randomItem);
     i++;
   }
-  return sqarray;
+  return Promise.resolve(sqarray);
 }
 
 function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
-    timedColorFlash(sequence[i], i)
+    timedColorFlash(sequence[i], i);
   }
-
 }
 
 function timedColorFlash(box, sec) {
-  setTimeout(() => box.style.backgroundColor = "black", sec * 1000);
+  setTimeout(() => (box.style.backgroundColor = "black"), sec * 1000);
 }
 
 function resetAllWhite(boxarray) {
@@ -56,10 +52,10 @@ function resetAllWhite(boxarray) {
 function compareArrays() {
   for (i = 0; i < userSelection.length; i++) {
     if (userSelection[i] != sqarray[i]) {
-      return false
+      return false;
     }
   }
-  return true
+  return true;
 }
 
 // will listen for click event on square to check user response
@@ -76,23 +72,34 @@ function listenForUserSelection() {
   // }
 }
 
-function gameLoop(n) {
-  let seq = randomSequence(n)
-  changeColor(seq)
-  resetAllWhite(boxArray)
-  listenForUserSelection()
-  if (compareArrays() === true) {
-    alert("success")
-  } else {
-    alert("failed")
-  }
-
+function wait(seconds, callback) {
+  return new Promise(resolve => setTimeout(() => resolve(callback()), seconds));
 }
 
+// wait(2000, () => console.log("game"))
+//   .then(res => wait(2000, () => console.log("winning")))
+//   .then(res => console.log("end"));
+
+function gameLoop(n) {
+  randomSequence(n)
+    .then(res => changeColor(res))
+    .then(res => resetAllWhite(boxArray()))
+    .then(res => listenForUserSelection())
+    .then(res => compareArrays());
+
+  // resetAllWhite(boxArray);
+  // listenForUserSelection();
+  // if (compareArrays() === true) {
+  //   alert("success");
+  // } else {
+  //   alert("failed");
+}
+// }
+
 function init() {
-  document.getElementById("button").addEventListener("click", (e) => {
-    console.log("clicked")
-    gameLoop(3)
+  document.getElementById("button").addEventListener("click", e => {
+    console.log("clicked");
+    gameLoop(3);
   });
 }
 
