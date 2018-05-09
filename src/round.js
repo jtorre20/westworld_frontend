@@ -3,8 +3,11 @@
 //then another function will check that it was the correct sequence
 // if it is, a new sequence will be created that is one additional box longer
 document.addEventListener("DOMContentLoaded", () => {
-  let counter = 0;
-});
+
+}) 
+let userSelection = [];
+let sqarray = [];
+
 function boxArray() {
   let boxes = [];
   for (let row = 0; row < 5; row++) {
@@ -15,13 +18,14 @@ function boxArray() {
   }
   return boxes;
 }
+
 function getGrid() {
   return document.getElementById("identicon");
 }
 
+
 function randomSequence(n) {
   let i = 0;
-  let sqarray = [];
   let arraybox = boxArray();
   // sqarray = []
   while (i < n) {
@@ -34,12 +38,13 @@ function randomSequence(n) {
 
 function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
-    sequence[i].style.backgroundColor = "black";
-    // setTimeout(
-    //   () => (currentBox.style.backgroundColor = "rgb(245, 245, 250)"),
-    //   1000
-    // );
+    timedColorFlash(sequence[i], i)
   }
+
+}
+
+function timedColorFlash(box, sec) {
+  setTimeout(() => box.style.backgroundColor = "black", sec * 1000);
 }
 
 function resetAllWhite(boxarray) {
@@ -48,19 +53,47 @@ function resetAllWhite(boxarray) {
   }
 }
 
+function compareArrays() {
+  for (i = 0; i < userSelection.length; i++) {
+    if (userSelection[i] != sqarray[i]) {
+      return false
+    }
+  }
+  return true
+}
+
 // will listen for click event on square to check user response
 
-function listenForSelection() {
-  eventArray = [];
+function listenForUserSelection() {
   // clickCount = sqarray.length;
 
   document.getElementById("main").addEventListener("click", e => {
-    eventArray.push(e.target);
+    userSelection.push(e.target);
     e.target.style.backgroundColor = "purple";
   });
   // if (eventArray === sqarray) {
   //   console.log("coorect");
   // }
+}
+
+function gameLoop(n) {
+  let seq = randomSequence(n)
+  changeColor(seq)
+  resetAllWhite(boxArray)
+  listenForUserSelection()
+  if (compareArrays() === true) {
+    alert("success")
+  } else {
+    alert("failed")
+  }
+
+}
+
+function init() {
+  document.getElementById("button").addEventListener("click", (e) => {
+    console.log("clicked")
+    gameLoop(3)
+  });
 }
 
 // generate a new sequence
