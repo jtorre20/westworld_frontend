@@ -85,7 +85,7 @@ function userSelectionCompleted() {
 function gameLoop(n) {
   randomSequence(n).then(resp => changeColor(resp));
   listenForUserSelection();
-  userSelectionCompleted();
+  return userSelectionCompleted();
 }
 
 function levelOne() {
@@ -101,7 +101,27 @@ function levelTwo() {
     gameLoop(3);
   });
 }
-
-// for (i = 1; i < 10; i++) {
-//   gameLoop();
+// ******************************************FIXME*********************
+// ******************************************TESTING*********************
+// ******************************************TESTING*********************
+// ******************************************TESTING*********************
+// function continuousGame(x) {
+//   while (x < 10) {
+//     if (gameLoop(x) == true);
+//     console.log("sdfsd");
+//     x++;
+//     // level(x);
+//     // if (gameLoop(x) == true) {
+//     //   x++;
+//     //   continuousGame(x);
+//     // }
+//   }
+//   return "done";
+// }
+//
+// function level(n) {
+//   document.getElementById("level-one").addEventListener("click", e => {
+//     console.log("clicked");
+//     continuousGame(n);
+//   });
 // }
