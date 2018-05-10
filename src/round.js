@@ -33,24 +33,30 @@ function randomSequence(n) {
   return Promise.resolve(sqarray);
 }
 
+function wait(seconds, callback) {
+  return new Promise(resolve => setTimeout(() => resolve(callback()), seconds));
+}
+
 function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
     timedColorFlash(sequence[i], i);
   }
+  wait(5000, resetAllWhite);
 }
 
 function timedColorFlash(box, sec) {
   setTimeout(() => (box.style.backgroundColor = "black"), sec * 1000);
 }
 
-function resetAllWhite(boxarray) {
-  for (let i = 0; i < boxarray.length; i++) {
-    boxarray[i].style.backgroundColor = "white";
+function resetAllWhite() {
+  let arraybox = boxArray();
+  for (let i = 0; i < arraybox.length; i++) {
+    arraybox[i].style.backgroundColor = "white";
   }
 }
 
 function compareArrays() {
-  for (i = 0; i < userSelection.length; i++) {
+  for (let i = 0; i < userSelection.length; i++) {
     if (userSelection[i] != sqarray[i]) {
       return false;
     }
@@ -67,48 +73,35 @@ function listenForUserSelection() {
     userSelection.push(e.target);
     e.target.style.backgroundColor = "purple";
   });
-  // if (eventArray === sqarray) {
-  //   console.log("coorect");
-  // }
 }
 
-function wait(seconds, callback) {
-  return new Promise(resolve => setTimeout(() => resolve(callback()), seconds));
+function userSelectionCompleted() {
+  document.getElementById("user-done").addEventListener("click", e => {
+    console.log("complete");
+    console.log(compareArrays());
+  });
 }
-
-// wait(2000, () => console.log("game"))
-//   .then(res => wait(2000, () => console.log("winning")))
-//   .then(res => console.log("end"));
 
 function gameLoop(n) {
-  randomSequence(n)
-    .then(res => changeColor(res))
-    .then(res => resetAllWhite(boxArray()))
-    .then(res => listenForUserSelection())
-    .then(res => compareArrays());
-
-  // resetAllWhite(boxArray);
-  // listenForUserSelection();
-  // if (compareArrays() === true) {
-  //   alert("success");
-  // } else {
-  //   alert("failed");
+  randomSequence(n).then(resp => changeColor(resp));
+  listenForUserSelection();
+  userSelectionCompleted();
 }
-// }
 
-function init() {
-  document.getElementById("button").addEventListener("click", e => {
+function levelOne() {
+  document.getElementById("level-one").addEventListener("click", e => {
     console.log("clicked");
     gameLoop(3);
   });
 }
 
-// generate a new sequence
-//flash the colors of sequence
-//set setTimeout
-//chnge colors back go white
-//listen for clicks
-// store loctaion of click
-//compare it the original sequence
-//-- correct sequence = each click matches sequence array order
-//--incorrect -
+function levelTwo() {
+  document.getElementById("level-two").addEventListener("click", e => {
+    console.log("clicked");
+    gameLoop(3);
+  });
+}
+
+// for (i = 1; i < 10; i++) {
+//   gameLoop();
+// }
