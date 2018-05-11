@@ -5,6 +5,8 @@
 document.addEventListener("DOMContentLoaded", () => {});
 let userSelection = [];
 let sqarray = [];
+let level = 3
+let status = "fail"
 
 function boxArray() {
   let boxes = [];
@@ -59,8 +61,10 @@ function compareArrays() {
   for (let i = 0; i < userSelection.length; i++) {
     if (userSelection[i] != sqarray[i]) {
       return false;
-    }
+    } 
   }
+
+  status = "success"
   return true;
 }
 
@@ -82,27 +86,44 @@ function userSelectionCompleted() {
   });
 }
 
-function gameLoop(n) {
-  randomSequence(n).then(resp => changeColor(resp));
+
+function gameLoop(level) {
+  randomSequence(level).then(resp => changeColor(resp));
   listenForUserSelection();
-  return userSelectionCompleted();
+  userSelectionCompleted();
+  if (status === "fail") {
+    alert("You're a loser")
+    level = 3
+    sqarray = []
+    userSelection = []
+    return "string"
+  } else {
+      let score = 100
+      level++
+      alert("Good job, keepin it 100")
+      sqarray = []
+      userSelection = []
+      return "broken"
+      
+      // setInterval(gameLoop(level), 4000)
+  }
 }
 
 function levelOne() {
   document.getElementById("level-one").addEventListener("click", e => {
     console.log("clicked");
-    gameLoop(3);
+    gameLoop(level);
   });
 }
 
 function levelTwo() {
   document.getElementById("level-two").addEventListener("click", e => {
     console.log("clicked");
-    gameLoop(3);
+    gameLoop(level);
   });
 }
 
-function postRequest () {
+function sendScore() {
   fetch('http://localhost:3000/api/v1/rounds', {
     method: "POST",
     body: JSON.stringify({
@@ -114,7 +135,27 @@ function postRequest () {
     }
   })
 }
-// ******************************************FIXME*********************
+
+
+
+function grabScores() {
+  fetch('http://localhost:3000/api/v1/rounds').then(res => res.json()).then(json => {
+    json.forEach(round => {
+      // debugger
+      let myTable = document.getElementById("myTable")
+      let tableRow = document.createElement("tr")
+      let newRow = myTable.appendChild(tableRow)
+      // row = m.insertRow(2)
+      let cell1 = newRow.insertCell(0)
+      cell1.innerHTML = `${round.name}`
+
+      let cell2 = newRow.insertCell(1)
+      cell2.innerHTML = `${round.score}`
+
+    });
+  })
+}
+// ******************************************FIXME:*********************
 // ******************************************TESTING*********************
 // ******************************************TESTING*********************
 // ******************************************TESTING*********************
