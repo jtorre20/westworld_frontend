@@ -46,7 +46,7 @@ function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
     timedColorFlash(sequence[i], i);
   }
-  wait(7000, resetAllWhite);
+  wait(12000, resetAllWhite);
 }
 
 function timedColorFlash(box, sec) {
@@ -96,6 +96,7 @@ function endOfRound(check) {
     level = 3;
     sqarray = [];
     userSelection = [];
+    resetAllWhite(boxArray)
     return "lose";
   } else {
     let score = 100;
@@ -103,6 +104,7 @@ function endOfRound(check) {
     alert("Good job, keepin it 100");
     sqarray = [];
     userSelection = [];
+    resetAllWhite(boxArray)
     return "win";
   }
 }
@@ -120,13 +122,6 @@ function initListeners() {
   listenForUserCompletion();
 }
 
-function levelTwo() {
-  document.getElementById("level-two").addEventListener("click", e => {
-    console.log("clicked");
-    gameLoop(level);
-  });
-}
-
 function sendScore(newScore) {
   fetch("http://localhost:3000/api/v1/rounds", {
     method: "POST",
@@ -138,7 +133,11 @@ function sendScore(newScore) {
       Accept: "application/json",
       "Content-type": "application/json"
     }
-  });
+  }).then((res) => {
+    return res.json()
+  }).then(json => {
+    console.log("ya")
+  })
 }
 
 function grabScores() {
