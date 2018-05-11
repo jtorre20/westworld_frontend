@@ -101,6 +101,19 @@ function levelTwo() {
     gameLoop(3);
   });
 }
+
+function postRequest () {
+  fetch('http://localhost:3000/api/v1/rounds', {
+    method: "POST",
+    body: JSON.stringify({
+      score: 50
+    }),
+    headers: {
+      'Accept': 'application/json',
+      'Content-type': 'application/json'
+    }
+  })
+}
 // ******************************************FIXME*********************
 // ******************************************TESTING*********************
 // ******************************************TESTING*********************
