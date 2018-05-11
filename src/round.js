@@ -2,11 +2,14 @@
 // user will then repeat the sequence
 //then another function will check that it was the correct sequence
 // if it is, a new sequence will be created that is one additional box longer
-document.addEventListener("DOMContentLoaded", () => {});
+document.addEventListener("DOMContentLoaded", () => {
+  initListeners();
+  grabScores();
+});
 let userSelection = [];
 let sqarray = [];
-let level = 3
-let status = "fail"
+let level = 3;
+// let status = "fail";
 
 function boxArray() {
   let boxes = [];
@@ -43,11 +46,11 @@ function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
     timedColorFlash(sequence[i], i);
   }
-  wait(5000, resetAllWhite);
+  wait(7000, resetAllWhite);
 }
 
 function timedColorFlash(box, sec) {
-  setTimeout(() => (box.style.backgroundColor = "black"), sec * 1000);
+  setTimeout(() => (box.style.backgroundColor = "#1C2833"), sec * 1000);
 }
 
 function resetAllWhite() {
@@ -61,10 +64,11 @@ function compareArrays() {
   for (let i = 0; i < userSelection.length; i++) {
     if (userSelection[i] != sqarray[i]) {
       return false;
-    } 
+    }
   }
-
-  status = "success"
+  let userScore = 100 * level;
+  sendScore(userScore);
+  status = "success";
   return true;
 }
 
@@ -75,45 +79,45 @@ function listenForUserSelection() {
 
   document.getElementById("main").addEventListener("click", e => {
     userSelection.push(e.target);
-    e.target.style.backgroundColor = "purple";
+    e.target.style.backgroundColor = "#AAB7B8";
   });
 }
 
-function userSelectionCompleted() {
+function listenForUserCompletion() {
   document.getElementById("user-done").addEventListener("click", e => {
-    console.log("complete");
-    console.log(compareArrays());
+    let check = compareArrays();
+    endOfRound(check);
   });
 }
 
-
-function gameLoop(level) {
-  randomSequence(level).then(resp => changeColor(resp));
-  listenForUserSelection();
-  userSelectionCompleted();
-  if (status === "fail") {
-    alert("You're a loser")
-    level = 3
-    sqarray = []
-    userSelection = []
-    return "string"
+function endOfRound(check) {
+  if (!check) {
+    alert("You're a loser");
+    level = 3;
+    sqarray = [];
+    userSelection = [];
+    return "lose";
   } else {
-      let score = 100
-      level++
-      alert("Good job, keepin it 100")
-      sqarray = []
-      userSelection = []
-      return "broken"
-      
-      // setInterval(gameLoop(level), 4000)
+    let score = 100;
+    level++;
+    alert("Good job, keepin it 100");
+    sqarray = [];
+    userSelection = [];
+    return "win";
   }
 }
 
-function levelOne() {
+function gameLoop(level) {
+  randomSequence(level).then(resp => changeColor(resp));
+}
+
+function initListeners() {
   document.getElementById("level-one").addEventListener("click", e => {
     console.log("clicked");
     gameLoop(level);
   });
+  listenForUserSelection();
+  listenForUserCompletion();
 }
 
 function levelTwo() {
@@ -123,37 +127,37 @@ function levelTwo() {
   });
 }
 
-function sendScore() {
-  fetch('http://localhost:3000/api/v1/rounds', {
+function sendScore(newScore) {
+  fetch("http://localhost:3000/api/v1/rounds", {
     method: "POST",
     body: JSON.stringify({
-      score: 50
+      score: newScore,
+      name: "User1"
     }),
     headers: {
-      'Accept': 'application/json',
-      'Content-type': 'application/json'
+      Accept: "application/json",
+      "Content-type": "application/json"
     }
-  })
+  });
 }
 
-
-
 function grabScores() {
-  fetch('http://localhost:3000/api/v1/rounds').then(res => res.json()).then(json => {
-    json.forEach(round => {
-      // debugger
-      let myTable = document.getElementById("myTable")
-      let tableRow = document.createElement("tr")
-      let newRow = myTable.appendChild(tableRow)
-      // row = m.insertRow(2)
-      let cell1 = newRow.insertCell(0)
-      cell1.innerHTML = `${round.name}`
+  fetch("http://localhost:3000/api/v1/rounds")
+    .then(res => res.json())
+    .then(json => {
+      json.forEach(round => {
+        // debugger
+        let myTable = document.getElementById("myTable");
+        let tableRow = document.createElement("tr");
+        let newRow = myTable.appendChild(tableRow);
+        // row = m.insertRow(2)
+        let cell1 = newRow.insertCell(0);
+        cell1.innerHTML = `${round.name}`;
 
-      let cell2 = newRow.insertCell(1)
-      cell2.innerHTML = `${round.score}`
-
+        let cell2 = newRow.insertCell(1);
+        cell2.innerHTML = `${round.score}`;
+      });
     });
-  })
 }
 // ******************************************FIXME:*********************
 // ******************************************TESTING*********************
