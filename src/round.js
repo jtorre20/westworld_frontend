@@ -1,14 +1,24 @@
-// create a function that produces a random box color sequence
-// user will then repeat the sequence
-//then another function will check that it was the correct sequence
-// if it is, a new sequence will be created that is one additional box longer
 document.addEventListener("DOMContentLoaded", () => {
   initListeners();
   grabScores();
 });
 let userSelection = [];
 let sqarray = [];
-let level = 3;
+let level = 1;
+let colorsArray = [
+  "black",
+  "red",
+  "purple",
+  "blue",
+  "orange",
+  "green",
+  "orange",
+  "yellow",
+  "brown",
+  "darkred",
+  "gold",
+  "pink"
+];
 // let status = "fail";
 
 function boxArray() {
@@ -46,11 +56,16 @@ function changeColor(sequence) {
   for (let i = 0; i < sequence.length; i++) {
     timedColorFlash(sequence[i], i);
   }
-  wait(7000, resetAllWhite);
+  wait(sequence.length * 2000, resetAllWhite);
 }
 
 function timedColorFlash(box, sec) {
-  setTimeout(() => (box.style.backgroundColor = "#1C2833"), sec * 1000);
+  setTimeout(
+    () =>
+      (box.style.backgroundColor =
+        colorsArray[Math.floor(Math.random() * colorsArray.length)]),
+    sec * 2000
+  );
 }
 
 function resetAllWhite() {
